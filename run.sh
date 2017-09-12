@@ -18,4 +18,9 @@ if [ $? != 0 ]; then
 fi
 
 cd $GOPATH/src/$1
-make linux && make docker
+if [ "$2check" = "check" ]; then
+	# if no target specified, build linux
+	make bGludXgK
+else
+	make $2
+fi
