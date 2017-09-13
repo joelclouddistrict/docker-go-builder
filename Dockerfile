@@ -50,7 +50,7 @@ make && \
 make install && \
 ldconfig && \
 cd $GOPATH && \
-rm v${PROTOC_VERSION} && \
+rm v${PROTOC_VERSION}.tar.gz && \
 rm -rf protobuf-${PROTOC_VERSION}
 
 # Install gogoprotobuf
