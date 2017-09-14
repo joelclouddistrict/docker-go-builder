@@ -83,10 +83,13 @@ COPY run.sh /run.sh
 ENV GOPATH /go
 ENV PATH $GOPATH/bin:/usr/local/go/bin:$PATH
 
-COPY --from=builder /go /
+COPY --from=builder /usr/local/go /usr/local/go
 COPY --from=builder /usr/local/bin /usr/local/bin
 COPY --from=builder /usr/local/lib /usr/local/lib
 COPY --from=builder /usr/local/include /usr/local/include
+COPY --from=builder /go/* /go/
+
+RUN go version
 
 WORKDIR $GOPATH
 
