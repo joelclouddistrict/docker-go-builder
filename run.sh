@@ -19,8 +19,7 @@ fi
 
 cd $GOPATH/src/$1
 if [ "$2check" = "check" ]; then
-	# if no target specified, build linux
-	make bGludXgK
+	make all
 else
 	make $2
 fi
