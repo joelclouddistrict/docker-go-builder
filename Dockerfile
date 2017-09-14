@@ -1,5 +1,5 @@
 # $ docker run -ti -v $PWD:/go/src/bitbucket.org/acbapis/legalitas -v /Users/jllopis/devel/go/own/src/bitbucket.org/acbapis/acbapis:/go/src/bitbucket.org/acbapis/acbapis buildert bitbucket.org/acbapis/legalitas bGludXgK
-FROM debian:buster-slim
+FROM debian:buster-slim AS builder
 
 # gcc for cgo
 RUN apt-get update && apt-get install -y --no-install-recommends \
@@ -29,18 +29,10 @@ RUN set -eux; \
 ENV GOPATH /go
 ENV PATH $GOPATH/bin:/usr/local/go/bin:$PATH
 
-COPY run.sh /run.sh
-
 RUN mkdir -p "$GOPATH/src" "$GOPATH/bin" && chmod -R 777 "$GOPATH"
 WORKDIR $GOPATH
 
-RUN echo "PATH IS $PATH"
-
 # Install protocol buffers compiler
-#RUN wget "https://github.com/google/protobuf/releases/download/v${PROTOC_VERSION}/protoc-${PROTOC_VERSION}-linux-x86_64.zip" ; \
-#unzip -p protoc-${PROTOC_VERSION}-linux-x86_64.zip bin/protoc > /usr/local/bin/protoc ; \
-#chmod +x /usr/local/bin/protoc ; \
-#rm protoc-${PROTOC_VERSION}-linux-x86_64.zip
 RUN wget https://github.com/google/protobuf/archive/v${PROTOC_VERSION}.tar.gz && \
 tar zxvf v${PROTOC_VERSION}.tar.gz  && \
 cd protobuf-${PROTOC_VERSION} && \
@@ -84,7 +76,18 @@ rm -rf grpc
 
 # Copy compiled files (do not compile with protogogo. Must be fixed!
 RUN cp /go/src/google.golang.org/genproto/googleapis/api/annotations/*.pb.go /go/src/github.com/grpc-ecosystem/grpc-gateway/third_party/googleapis/google/api/
-#COPY annotations.pb.go /go/src/github.com/grpc-ecosystem/grpc-gateway/third_party/googleapis/google/api
-#COPY http.pb.go /go/src/github.com/grpc-ecosystem/grpc-gateway/third_party/googleapis/google/api
+
+FROM debian:buster-slim
+COPY run.sh /run.sh
+
+ENV GOPATH /go
+ENV PATH $GOPATH/bin:/usr/local/go/bin:$PATH
+
+COPY --from=builder /go /
+COPY --from=builder /usr/local/bin /usr/local/bin
+COPY --from=builder /usr/local/lib /usr/local/lib
+COPY --from=builder /usr/local/include /usr/local/include
+
+WORKDIR $GOPATH
 
 ENTRYPOINT ["/run.sh"]
