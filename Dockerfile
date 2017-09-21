@@ -78,6 +78,12 @@ rm -rf grpc
 RUN cp /go/src/google.golang.org/genproto/googleapis/api/annotations/*.pb.go /go/src/github.com/grpc-ecosystem/grpc-gateway/third_party/googleapis/google/api/
 
 FROM debian:buster-slim
+RUN apt-get update && apt-get install -y --no-install-recommends \
+		make \
+		unzip \
+		ca-certificates \
+	&& rm -rf /var/lib/apt/lists/*
+
 COPY run.sh /run.sh
 
 ENV GOPATH /go
