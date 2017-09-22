@@ -2,18 +2,13 @@
 FROM debian:buster-slim AS builder
 
 # gcc for cgo
-RUN apt-get update && apt-get install -y --no-install-recommends \
-		g++ \
-		gcc \
-		libc6-dev \
+RUN buildDeps='build-essential curl autoconf automake libtool zlib1g-dev libgflags-dev libgtest-dev clang libc++-dev gcc g++ libc6-dev pkg-config wget'; \
+		apt-get update && apt-get install -y --no-install-recommends \
 		make \
-		pkg-config \
-		wget \
 		git \
 		unzip \
 		ca-certificates \
-		build-essential curl autoconf automake libtool zlib1g-dev libgflags-dev libgtest-dev clang libc++-dev \
-	&& rm -rf /var/lib/apt/lists/*
+		$buildDeps
 
 ENV GOLANG_VERSION 1.9
 ENV PROTOC_VERSION 3.4.0
@@ -77,9 +72,13 @@ rm -rf grpc
 # Copy compiled files (do not compile with protogogo. Must be fixed!
 RUN cp /go/src/google.golang.org/genproto/googleapis/api/annotations/*.pb.go /go/src/github.com/grpc-ecosystem/grpc-gateway/third_party/googleapis/google/api/
 
+# Cleanup
+RUN apt purge $buildDeps && rm -rf /var/lib/apt/lists/*
+
 FROM debian:buster-slim
 RUN apt-get update && apt-get install -y --no-install-recommends \
 		make \
+		git \
 		unzip \
 		ca-certificates \
 	&& rm -rf /var/lib/apt/lists/*
@@ -93,7 +92,7 @@ COPY --from=builder /usr/local/go /usr/local/go
 COPY --from=builder /usr/local/bin /usr/local/bin
 COPY --from=builder /usr/local/lib /usr/local/lib
 COPY --from=builder /usr/local/include /usr/local/include
-COPY --from=builder /go/* /go/
+COPY --from=builder /go /go
 
 RUN go version
 
