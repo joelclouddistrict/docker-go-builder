@@ -94,6 +94,8 @@ COPY --from=builder /usr/local/lib /usr/local/lib
 COPY --from=builder /usr/local/include /usr/local/include
 COPY --from=builder /go /go
 
+RUN ldconfig
+
 RUN go version
 
 WORKDIR $GOPATH
