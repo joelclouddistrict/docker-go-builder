@@ -10,8 +10,8 @@ RUN buildDeps='build-essential curl autoconf automake libtool zlib1g-dev libgfla
 		ca-certificates \
 		$buildDeps
 
-ENV GOLANG_VERSION 1.9
-ENV PROTOC_VERSION 3.4.0
+ENV GOLANG_VERSION 1.9.2
+ENV PROTOC_VERSION 3.5.0
 
 RUN set -eux; \
 	url="https://golang.org/dl/go${GOLANG_VERSION}.linux-amd64.tar.gz"; \
@@ -69,7 +69,6 @@ for plugin in grpc_php_plugin \
 cd $GOPATH && \
 rm -rf grpc
 
-# Copy compiled files (do not compile with protogogo. Must be fixed!
 RUN cp /go/src/google.golang.org/genproto/googleapis/api/annotations/*.pb.go /go/src/github.com/grpc-ecosystem/grpc-gateway/third_party/googleapis/google/api/
 
 # Cleanup
