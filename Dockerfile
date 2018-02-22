@@ -10,8 +10,8 @@ RUN buildDeps='build-essential curl autoconf automake libtool zlib1g-dev libgfla
 		ca-certificates \
 		$buildDeps
 
-ENV GOLANG_VERSION 1.9.2
-ENV PROTOC_VERSION 3.5.0
+ENV GOLANG_VERSION 1.10
+ENV PROTOC_VERSION 3.5.1
 
 RUN set -eux; \
 	url="https://golang.org/dl/go${GOLANG_VERSION}.linux-amd64.tar.gz"; \
