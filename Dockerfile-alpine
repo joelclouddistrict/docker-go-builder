@@ -61,6 +61,7 @@ RUN apk update && \
 		apk add git \
 		make \
 		unzip \
+		g++ \
 		ca-certificates \
 	&& rm -rf /var/cache/apk/*
 
