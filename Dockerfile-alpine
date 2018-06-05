@@ -10,8 +10,8 @@ RUN buildDeps='build-base libressl-dev util-linux-dev curl autoconf automake zli
 		libtool \
 		$buildDeps
 
-ENV GOLANG_VERSION 1.10.0
-ENV PROTOC_VERSION 3.5.1
+ENV GOLANG_VERSION 1.10.2
+ENV PROTOC_VERSION 3.5.2
 
 # Install protocol buffers compiler
 RUN wget https://github.com/google/protobuf/archive/v${PROTOC_VERSION}.tar.gz && \
@@ -26,13 +26,13 @@ cd ${GOPATH} && \
 rm v${PROTOC_VERSION}.tar.gz && \
 rm -rf protobuf-${PROTOC_VERSION}
 
-# Install go protobuf
-RUN go get -u github.com/golang/protobuf/protoc-gen-go
-
 # Install grpc-go and grpc-gateway and companions
 RUN go get -u google.golang.org/grpc ; \
 	go get -u github.com/grpc-ecosystem/grpc-gateway/protoc-gen-grpc-gateway ; \
 	go get -u github.com/grpc-ecosystem/grpc-gateway/protoc-gen-swagger
+
+# Install go grpc protobuf plugin
+RUN go get -u github.com/golang/protobuf/protoc-gen-go
 
 # Install grpc plugins
 RUN git clone -b $(curl -L https://grpc.io/release) https://github.com/grpc/grpc && \
