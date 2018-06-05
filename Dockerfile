@@ -10,8 +10,8 @@ RUN buildDeps='build-essential curl autoconf automake libtool zlib1g-dev libgfla
 		ca-certificates \
 		$buildDeps
 
-ENV GOLANG_VERSION 1.10
-ENV PROTOC_VERSION 3.5.1
+ENV GOLANG_VERSION 1.10.2
+ENV PROTOC_VERSION 3.5.2
 
 RUN set -eux; \
 	url="https://golang.org/dl/go${GOLANG_VERSION}.linux-amd64.tar.gz"; \
@@ -40,17 +40,13 @@ cd $GOPATH && \
 rm v${PROTOC_VERSION}.tar.gz && \
 rm -rf protobuf-${PROTOC_VERSION}
 
-# Install gogoprotobuf
-RUN go get -u github.com/gogo/protobuf/proto ; \
-	go get -u github.com/gogo/protobuf/jsonpb ; \
-	go get -u github.com/gogo/protobuf/protoc-gen-gogo ; \
-	go get -u github.com/gogo/protobuf/gogoproto
-
 # Install grpc-go and grpc-gateway and companions
 RUN go get -u google.golang.org/grpc ; \
 	go get -u github.com/grpc-ecosystem/grpc-gateway/protoc-gen-grpc-gateway ; \
-	go get -u github.com/grpc-ecosystem/grpc-gateway/protoc-gen-swagger ; \
-	go get -u github.com/golang/protobuf/protoc-gen-go
+	go get -u github.com/grpc-ecosystem/grpc-gateway/protoc-gen-swagger
+
+# Install go grpc protobuf plugin
+RUN go get -u github.com/golang/protobuf/protoc-gen-go
 
 # Install grpc plugins
 RUN git clone -b $(curl -L https://grpc.io/release) https://github.com/grpc/grpc && \
