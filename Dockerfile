@@ -72,6 +72,8 @@ RUN apt purge $buildDeps && rm -rf /var/lib/apt/lists/*
 
 FROM debian:buster-slim
 RUN apt-get update && apt-get install -y --no-install-recommends \
+		gcc \
+		libc6-dev \
 		make \
 		git \
 		unzip \
