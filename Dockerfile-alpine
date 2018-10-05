@@ -1,5 +1,5 @@
 # $ docker run -ti -v $PWD:/go/src/bitbucket.org/acbapis/legalitas -v /Users/jllopis/devel/go/own/src/bitbucket.org/acbapis/acbapis:/go/src/bitbucket.org/acbapis/acbapis buildert bitbucket.org/acbapis/legalitas bGludXgK
-FROM golang:1.10.0-alpine3.7 AS builder
+FROM golang:1.11.1-alpine3.8 AS builder
 
 # gcc for cgo
 RUN buildDeps='build-base libressl-dev util-linux-dev curl autoconf automake zlib clang g++ gcc wget'; \
@@ -10,8 +10,10 @@ RUN buildDeps='build-base libressl-dev util-linux-dev curl autoconf automake zli
 		libtool \
 		$buildDeps
 
-ENV GOLANG_VERSION 1.10.2
-ENV PROTOC_VERSION 3.5.2
+ENV GOLANG_VERSION 1.11.1
+ENV PROTOC_VERSION 3.6.1
+ENV GRPC_GO_VERSION 1.15.0
+ENV GRPC_GATEWAY_VERSION 1.5.1
 
 # Install protocol buffers compiler
 RUN wget https://github.com/google/protobuf/archive/v${PROTOC_VERSION}.tar.gz && \
@@ -56,7 +58,7 @@ RUN cp /go/src/google.golang.org/genproto/googleapis/api/annotations/*.pb.go /go
 # Cleanup
 RUN apk del $buildDeps && rm -rf /var/cache/apk/*
 
-FROM alpine:3.7
+FROM alpine:3.8
 RUN apk update && \
 		apk add git \
 		make \
