@@ -2,7 +2,7 @@
 FROM debian:buster-slim AS builder
 
 # gcc for cgo
-RUN buildDeps='build-essential curl autoconf automake libtool zlib1g-dev libgflags-dev libgtest-dev clang libc++-dev gcc g++ libc6-dev pkg-config wget'; \
+RUN buildDeps='build-essential curl autoconf automake libtool zlib1g-dev libgflags-dev libgtest-dev clang libc++-dev gcc g++ libc6-dev pkg-config wget apt libc-ares-dev'; \
 		apt-get update && apt-get install -y --no-install-recommends \
 		make \
 		git \
@@ -10,8 +10,10 @@ RUN buildDeps='build-essential curl autoconf automake libtool zlib1g-dev libgfla
 		ca-certificates \
 		$buildDeps
 
-ENV GOLANG_VERSION 1.10.2
-ENV PROTOC_VERSION 3.5.2
+ENV GOLANG_VERSION 1.11.1
+ENV PROTOC_VERSION 3.6.1
+ENV GRPC_GO_VERSION 1.15.0
+ENV GRPC_GATEWAY_VERSION 1.5.1
 
 RUN set -eux; \
 	url="https://golang.org/dl/go${GOLANG_VERSION}.linux-amd64.tar.gz"; \
