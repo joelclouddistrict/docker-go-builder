@@ -12,7 +12,7 @@ RUN buildDeps='build-essential curl autoconf automake libtool zlib1g-dev libgfla
 
 ENV GOLANG_VERSION 1.12.4
 ENV PROTOC_VERSION 3.7.1
-ENV GRPC_GO_VERSION 1.20.0
+ENV GRPC_GO_VERSION 1.28.0
 ENV GRPC_GATEWAY_VERSION 1.8.5
 
 RUN set -eux; \
